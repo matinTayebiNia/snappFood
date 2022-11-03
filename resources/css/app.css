@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "Bakh";
+
+    font-style: normal;
+
+    font-weight: normal;
+
+    src: url('/../../public/fonts/bakh_Medium.woff');
+}
+
+* {
+    font-family: "bakh", sans-serif;
+}
