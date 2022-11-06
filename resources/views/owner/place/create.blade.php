@@ -167,7 +167,7 @@
                             </label>
                             <select class="js-example-basic-single w-1/2" id="categories" multiple
                                     name="categories[]">
-                                @foreach(\App\Models\Category::all() as $category)
+                                @foreach(\App\Models\Category::where("type","ForRestaurant")->get() as $category)
                                     <option
                                         value="{{$category->id}}"
                                         {{in_array($category->id,old("categories")??[])?"selected":""}}>

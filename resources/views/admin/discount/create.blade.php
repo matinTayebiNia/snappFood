@@ -104,7 +104,7 @@
                                                     focus:ring-2 focus:ring-purple-600
                                                     focus:border-transparent
 "
-                                    value="{{old("expired_at")}}"
+                                    value="{{old("expired_at")}}" type="date"
                                     name="expired_at" placeholder="تاریخ انقضا">
 
 

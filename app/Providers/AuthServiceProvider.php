@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Middleware\Authenticate;
 use App\Models\Admin;
 use App\Models\Permission;
 use Illuminate\Foundation\Auth\User;

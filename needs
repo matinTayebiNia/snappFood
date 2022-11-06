@@ -30,3 +30,16 @@ todos
 get api for states and cities
 
 
+
+============
+
+supervisor:
+https://laravel.com/docs/9.x/queues#supervisor-configuration
+
+background command:
+https://linuxize.com/post/how-to-run-linux-commands-in-background/
+
+Laravel Octane:
+https://laravel.com/docs/9.x/octane
+
+

@@ -58,16 +58,17 @@ class ProductController extends Controller
         $image = $request->file("image");
         if ($image) {
             $fullPath = $this->StoreImage($image);
-           Product::create([
+            $request->user("owner")->place->products()->create([
                 "name" => $request->input("name"),
                 "Basic_cases" => $request->input("Basic_cases"),
                 "price" => $request->input("price"),
                 "image" => $fullPath,
                 "category_id" => $request->input("category_id"),
-                "place_id" => $request->user()->place->id,
             ]);
         }
-        return redirect(route("owner.products.index"))->with("success", "product created");
+
+        return redirect(route("owner.products.index"))
+            ->with("success", "product created");
     }
 
     /**
