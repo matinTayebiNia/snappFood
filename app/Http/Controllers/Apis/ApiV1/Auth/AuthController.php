@@ -9,6 +9,7 @@ use App\Http\Requests\Apis\ApiV1\Auth\UpdateUserInfoRequest;
 use App\Http\Requests\Apis\ApiV1\Auth\VerifyCodeRequest;
 use App\Models\ActiveCode;
 use App\Models\User;
+use Ghasedak\GhasedakApi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -34,9 +35,13 @@ class AuthController extends Controller
             }
             $code = ActiveCode::generateCode($user);
 
-            //todo: send sms code
+            $api = new GhasedakApi(env("GHSEDAK_API_KEY"));
+            $api->SendSimple($user->phone, "codeTest:{$code}");
 
-            return response()->json(["message" => "sms successfully  sent", "status" => true]);
+            return $this->successMessage([
+                "message" => "sms successfully  sent",
+                "status" => true
+            ]);
 
         } catch (Exception $exception) {
             return $this->throwErrorMessageException([
@@ -68,7 +73,11 @@ class AuthController extends Controller
 
             //create token and send for user
             $token = $user->createToken($request->input("email"))->plainTextToken;
-            return response()->json(["token" => $token, "status" => true]);
+
+            return $this->successMessage([
+                "token" => $token,
+                "status" => true
+            ]);
 
         } catch (Exception $exception) {
             return $this->throwErrorMessageException([
@@ -86,28 +95,14 @@ class AuthController extends Controller
             $phone = $user->phone_number;
             $code = ActiveCode::generateCode($user);
 
-            //todo: send sms code
+            $api = new GhasedakApi(env("GHSEDAK_API_KEY"));
+            $api->SendSimple($phone, "codeTest:{$code}");
 
-            return response()->json(["message" => " sms  successfully sent again", "status" => true]);
-
-        } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
-                "message" => $exception->getMessage(),
-                "code" => $exception->getCode()
+            return $this->successMessage([
+                "msg" => " sms  successfully sent again",
+                "status" => true
             ]);
-        }
 
-    }
-
-    /**
-     * @param UpdateUserInfoRequest $request
-     * @return JsonResponse
-     */
-    public function update(UpdateUserInfoRequest $request): JsonResponse
-    {
-        try {
-            auth()->user()->update($request->all());
-            return response()->json(["message" => "user updated successfully ", "status" => true]);
         } catch (Exception $exception) {
             return $this->throwErrorMessageException([
                 "message" => $exception->getMessage(),

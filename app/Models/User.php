@@ -38,4 +38,11 @@ class User extends Authenticatable
         return $this->hasMany(ActiveCode::class);
     }
 
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
+
+
 }

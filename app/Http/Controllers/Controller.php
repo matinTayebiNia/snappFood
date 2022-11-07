@@ -12,7 +12,12 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function throwErrorMessageException($message,$statusCode=500): JsonResponse
+    public function throwErrorMessageException($message, $statusCode = 500): JsonResponse
+    {
+        return response()->json($message, $statusCode);
+    }
+
+    public function successMessage($message, $statusCode = 200): JsonResponse
     {
         return response()->json($message, $statusCode);
     }

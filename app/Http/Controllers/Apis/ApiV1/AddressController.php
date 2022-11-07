@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Apis\ApiV1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Apis\ApiV1\Address\StoreAddressRequest;
+use App\Http\Requests\Apis\ApiV1\Address\UpdateAddressRequest;
+use App\Models\Address;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,7 +22,9 @@ class AddressController extends Controller
     {
         try {
 
-            return response()->json(["data" => "foo"]);
+            $addresses = auth()->user()->addresses();
+            return $this->successMessage(["data" => $addresses, "status" => true]);
+
 
         } catch (Exception $exception) {
             return $this->throwErrorMessageException([
@@ -33,45 +38,100 @@ class AddressController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return Response
+     * @param StoreAddressRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreAddressRequest $request): JsonResponse
     {
-        //
+        try {
+            auth()->user()->addresses()->create([
+                "width" => $request->input("width"),
+                "height" => $request->input("height"),
+                "state" => $request->input("state"),
+                "city" => $request->input("city"),
+                "street" => $request->input("street"),
+                "pluck" => $request->input("pluck"),
+            ]);
+
+            return $this->successMessage(["msg" => "address added successfully", "status" => true]);
+        } catch (Exception $exception) {
+            return $this->throwErrorMessageException([
+                "message" => $exception->getMessage(),
+                "code" => $exception->getCode()
+            ]);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return Response
+     * @param Address $address
+     * @return JsonResponse
      */
-    public function show($id)
+    public function setCurrentAddress(Address $address): JsonResponse
     {
-        //
+        try {
+            $address->update([
+                "currentAddress" => true
+            ]);
+
+            return $this->successMessage([
+                "msg" => "current address updated successfully",
+                "status" => true
+            ]);
+
+        } catch (Exception $exception) {
+            return $this->throwErrorMessageException([
+                "message" => $exception->getMessage(),
+                "code" => $exception->getCode()
+            ]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param int $id
-     * @return Response
+     * @param UpdateAddressRequest $request
+     * @param Address $address
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAddressRequest $request, Address $address): JsonResponse
     {
-        //
+        try {
+            $address->update($request->all());
+            return $this->successMessage([
+                "msg" => "address updated successfully",
+                "status" => true
+            ]);
+        } catch (Exception $exception) {
+            return $this->throwErrorMessageException([
+                "message" => $exception->getMessage(),
+                "code" => $exception->getCode()
+            ]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return Response
+     * @param Address $address
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Address $address): JsonResponse
     {
-        //
+        try {
+
+            $address->delete();
+            return $this->successMessage([
+                "msg" => "address deleted successfully",
+                "status" => true
+            ]);
+
+        } catch (Exception $exception) {
+            return $this->throwErrorMessageException([
+                "message" => $exception->getMessage(),
+                "code" => $exception->getCode()
+            ]);
+        }
     }
 }
