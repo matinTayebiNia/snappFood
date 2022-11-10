@@ -17,8 +17,9 @@ class Controller extends BaseController
         return response()->json($message, $statusCode);
     }
 
-    public function successMessage($message, $statusCode = 200): JsonResponse
+    public function successMessage(mixed $message, int $statusCode = 200): JsonResponse
     {
+        $message = ["data" => $message, "status" => true];
         return response()->json($message, $statusCode);
     }
 

@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Apis\ApiV1\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Apis\ApiV1\Auth\LoginRequest;
 use App\Http\Requests\Apis\ApiV1\Auth\ResendCodeRequest;
-use App\Http\Requests\Apis\ApiV1\Auth\UpdateUserInfoRequest;
 use App\Http\Requests\Apis\ApiV1\Auth\VerifyCodeRequest;
 use App\Models\ActiveCode;
 use App\Models\User;
 use Ghasedak\GhasedakApi;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use PHPUnit\Exception;
 
@@ -27,7 +25,7 @@ class AuthController extends Controller
     {
 
         try {
-            $user = User::where("phone", $request->input("phone"))->first();
+            $user = User::wherePhone($request->input("phone"))->first();
             if (!$user) {
                 $user = User::create([
                     "phone" => $request->input("phone"),
@@ -35,13 +33,12 @@ class AuthController extends Controller
             }
             $code = ActiveCode::generateCode($user);
 
-            $api = new GhasedakApi(env("GHSEDAK_API_KEY"));
-            $api->SendSimple($user->phone, "codeTest:{$code}");
+            //todo send sms
 
-            return $this->successMessage([
-                "message" => "sms successfully  sent",
-                "status" => true
-            ]);
+            /* $api = new GhasedakApi(env("GHSEDAK_API_KEY"));
+             $api->SendSimple($user->phone, "codeTest:{$code}");*/
+
+            return $this->successMessage( "sms successfully  sent",201);
 
         } catch (Exception $exception) {
             return $this->throwErrorMessageException([
@@ -58,8 +55,7 @@ class AuthController extends Controller
     {
         try {
             //finding User with phone number
-            $user = User::findOrFail($request->input("phone"));
-
+            $user = User::wherePhone($request->input("phone"))->first();
             // verifying  code
             $status = ActiveCode::verifyCode($request->input("token"), $user);
 
@@ -72,12 +68,9 @@ class AuthController extends Controller
             }
 
             //create token and send for user
-            $token = $user->createToken($request->input("email"))->plainTextToken;
+            $token = $user->createToken(env("APP_KEY_TOKEN"))->plainTextToken;
 
-            return $this->successMessage([
-                "token" => $token,
-                "status" => true
-            ]);
+            return $this->successMessage(["token" => $token]);
 
         } catch (Exception $exception) {
             return $this->throwErrorMessageException([
@@ -87,21 +80,30 @@ class AuthController extends Controller
         }
     }
 
-    public function resendCode(ResendCodeRequest $request)
+    /**
+     * @throws ValidationException
+     */
+    public function resendCode(ResendCodeRequest $request): JsonResponse
     {
         try {
-            $user = User::findOrFail($request->input("phone"));
+            $user = User::wherePhone($request->input("phone"))->first();
 
-            $phone = $user->phone_number;
+            if (!$user)
+                throw ValidationException::withMessages([
+                    "phone" => ["phone number not found please inter your phone number in login api
+                     and ask to resend code !"]
+                ]);
+
+
+            $phone = $user->phone;
             $code = ActiveCode::generateCode($user);
 
-            $api = new GhasedakApi(env("GHSEDAK_API_KEY"));
-            $api->SendSimple($phone, "codeTest:{$code}");
+            //todo send sms
 
-            return $this->successMessage([
-                "msg" => " sms  successfully sent again",
-                "status" => true
-            ]);
+            /* $api = new GhasedakApi(env("GHSEDAK_API_KEY"));
+             $api->SendSimple($phone, "codeTest:{$code}");*/
+
+            return $this->successMessage(" sms successfully sent again");
 
         } catch (Exception $exception) {
             return $this->throwErrorMessageException([

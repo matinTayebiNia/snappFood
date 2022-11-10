@@ -26,8 +26,8 @@ class VerifyCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "token" => ["required", "integer"],
-            "phone"=>["required","integer"]
+            "token" => ["required", "numeric"],
+            "phone"=>["required","numeric"]
         ];
     }
 }

@@ -15,6 +15,14 @@ class Category extends Model
         "name", "slug", "icon", "parent_id", "type"
     ];
 
+    protected $hidden=[
+        "created_at",
+        "updated_at",
+        "pivot",
+        "slug"
+    ];
+
+
     protected $guarded = ["id"];
 
     public function placeTypes(): BelongsToMany

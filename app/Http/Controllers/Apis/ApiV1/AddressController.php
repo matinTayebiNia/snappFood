@@ -7,6 +7,7 @@ use App\Http\Requests\Apis\ApiV1\Address\StoreAddressRequest;
 use App\Http\Requests\Apis\ApiV1\Address\UpdateAddressRequest;
 use App\Models\Address;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,8 +23,15 @@ class AddressController extends Controller
     {
         try {
 
-            $addresses = auth()->user()->addresses();
-            return $this->successMessage(["data" => $addresses, "status" => true]);
+            $addresses = auth()->user()->addresses()->get();
+
+            $addresses->map(function ($item) {
+                if (auth()->user()->getCurrentAddress($item->id))
+                    $item->CurrentAddress = true;
+
+            });
+
+            return $this->successMessage($addresses);
 
 
         } catch (Exception $exception) {
@@ -53,7 +61,8 @@ class AddressController extends Controller
                 "pluck" => $request->input("pluck"),
             ]);
 
-            return $this->successMessage(["msg" => "address added successfully", "status" => true]);
+            return $this->successMessage("address added successfully");
+
         } catch (Exception $exception) {
             return $this->throwErrorMessageException([
                 "message" => $exception->getMessage(),
@@ -65,20 +74,17 @@ class AddressController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Address $address
+     * @param int $address
      * @return JsonResponse
      */
-    public function setCurrentAddress(Address $address): JsonResponse
+    public function setCurrentAddress(int $address): JsonResponse
     {
         try {
-            $address->update([
-                "currentAddress" => true
+            auth()->user()->update([
+                "currentAddress" => $address
             ]);
 
-            return $this->successMessage([
-                "msg" => "current address updated successfully",
-                "status" => true
-            ]);
+            return $this->successMessage("current address updated successfully");
 
         } catch (Exception $exception) {
             return $this->throwErrorMessageException([

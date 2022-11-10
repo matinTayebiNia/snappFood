@@ -24,8 +24,7 @@ class ResendCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "phone"=>["required","integer"],
-            "resendCode"=>["required"]
+            "phone"=>["required","numeric"],
         ];
     }
 }

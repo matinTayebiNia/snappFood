@@ -29,7 +29,6 @@ return new class extends Migration {
             $table->string("street");
             $table->string("pluck");
 
-            $table->boolean("currentAddress")->default(0);
             $table->timestamps();
         });
     }

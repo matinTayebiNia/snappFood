@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->bigInteger("price");
             $table->string("image");
             $table->unsignedBigInteger('category_id');
+            $table->unsignedInteger("count");
             $table->foreign("category_id")
                 ->references("id")
                 ->on("categories")->cascadeOnDelete();

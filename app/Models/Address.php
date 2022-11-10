@@ -11,7 +11,15 @@ class Address extends Model
     use HasFactory;
 
     protected $fillable = [
-        "user_id", "place_id", "width", "height", "state", "city", "street", "pluck","currentAddress"
+        "user_id", "place_id", "width", "height", "state", "city", "street", "pluck"
+    ];
+
+    protected $hidden = [
+        "id",
+        "created_at",
+        'updated_at',
+        "user_id",
+        "place_id"
     ];
 
     public function user(): BelongsTo

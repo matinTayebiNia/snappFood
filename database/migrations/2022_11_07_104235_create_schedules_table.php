@@ -12,16 +12,15 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('places', function (Blueprint $table) {
+        Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("Number");
-            $table->string("account_number");
-            $table->string("image");
-            $table->unsignedBigInteger("owner_id");
-            $table->foreign("owner_id")
-                ->references("id")
-                ->on("owners")->cascadeOnDelete();
+
+            $table->unsignedBigInteger("place_id");
+            $table->foreign("place_id")->references("id")->on("places")
+                ->cascadeOnDelete();
+            $table->enum("day", ["saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]);
+            $table->string("startTime");
+            $table->string("endTime");
 
             $table->timestamps();
         });
@@ -34,6 +33,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('places');
+        Schema::dropIfExists('schedules');
     }
 };

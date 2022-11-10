@@ -26,11 +26,12 @@ class storePlaceRequest extends FormRequest
     {
         return [
             "name" => ["required", "string", "max:200"],
-            "Number" => ["required", "numeric", ],
+            "Number" => ["required", "numeric",],
             "account_number" => ["required", "numeric",],
             "types" => ["required", "array"],
             "categories" => ["required", "array"],
             "city" => ["required", "string"],
+            "image" => ["required", "image"],
             "state" => ["required", "string"],
             "street" => ["required", "string"],
             "pluck" => ["required", "string"],

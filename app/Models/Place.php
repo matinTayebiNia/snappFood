@@ -2,19 +2,61 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
+/**
+ * App\Models\Place
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $Number
+ * @property string $account_number
+ * @property string $image
+ * @property int $owner_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Address|null $address
+ * @property-read Collection|Category[] $categories
+ * @property-read int|null $categories_count
+ * @property-read Owner $owner
+ * @property-read Collection|PlaceType[] $placeTypes
+ * @property-read int|null $place_types_count
+ * @property-read Collection|Product[] $products
+ * @property-read int|null $products_count
+ * @property-read Collection|Schedule[] $schedules
+ * @property-read int|null $schedules_count
+ * @method static Builder|Place newModelQuery()
+ * @method static Builder|Place newQuery()
+ * @method static Builder|Place query()
+ * @method static Builder|Place whereAccountNumber($value)
+ * @method static Builder|Place whereCreatedAt($value)
+ * @method static Builder|Place whereId($value)
+ * @method static Builder|Place whereImage($value)
+ * @method static Builder|Place whereName($value)
+ * @method static Builder|Place whereNumber($value)
+ * @method static Builder|Place whereOwnerId($value)
+ * @method static Builder|Place whereUpdatedAt($value)
+ * @mixin Eloquent
+ */
 class Place extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        "name", "Number", 'account_number', "owner_id"
+        "name", "Number", 'account_number', "owner_id", "image"
+    ];
+
+    protected $hidden=[
+        "created_at","updated_at","owner_id"
     ];
 
     public function owner(): BelongsTo
@@ -41,6 +83,13 @@ class Place extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
+
+
 
 
 }

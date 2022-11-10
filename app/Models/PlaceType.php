@@ -17,7 +17,7 @@ class PlaceType extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class,"category_placetype","placetype_id","category_id");
+        return $this->belongsToMany(Category::class, "category_placetype", "placetype_id", "category_id");
     }
 
     public function places(): BelongsToMany
@@ -25,4 +25,10 @@ class PlaceType extends Model
         return $this->belongsToMany(Place::class, "place_placetype", "placetype_id", "place_id");
     }
 
+    protected $hidden = [
+        "created_at",
+        "updated_at",
+        "pivot",
+        "slug"
+    ];
 }
