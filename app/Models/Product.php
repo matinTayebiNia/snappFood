@@ -14,6 +14,12 @@ class Product extends Model
         "name", "Basic_cases", "price", "image", "category_id", "place_id","count"
     ];
 
+    protected $hidden=[
+      "created_at",
+      "updated_at",
+      "place_id",
+      "category_id",
+    ];
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
