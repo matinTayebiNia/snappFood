@@ -15,22 +15,15 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param $place
+     * @param Place $place
      * @return JsonResponse
      */
     public function index(Place $place): JsonResponse
     {
         try {
-            $category=  $place->products()->with("category");
-            return $this->successMessage(["data" => $category]);
 
-            $products = Product::where("place_id", $place)->whereHas()->get();
-            $products = collect($products);
-            $categories = $products->map(function ($product) {
-                return $product->category();
-            });
-
-            return $this->successMessage(["data" => $categories->all()]);
+            $categories = $place->products()->with("category")->get();
+            return $this->successMessage($categories);
 
         } catch (\Exception $exception) {
             return $this->throwErrorMessageException([

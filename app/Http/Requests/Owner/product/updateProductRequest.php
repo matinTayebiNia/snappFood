@@ -26,11 +26,12 @@ class updateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=>["required"],
-            "Basic_cases"=>["required"],
-            "price"=>["required","numeric"],
-            "image"=>["image"],
-            "category_id"=>["required"],
+            "name" => ["required"],
+            "Basic_cases" => ["required"],
+            "price" => ["required", "numeric"],
+            "image" => ["image"],
+            "category_id" => ["required"],
+            "count" => ["required", "integer", "min:0"]
         ];
     }
 }

@@ -24,11 +24,12 @@ class storeProductRequest extends FormRequest
     public function rules()
     {
         return [
-            "name"=>["required"],
-            "Basic_cases"=>["required"],
-            "price"=>["required","numeric"],
-            "image"=>["required","image"],
-            "category_id"=>["required"],
+            "name" => ["required"],
+            "Basic_cases" => ["required"],
+            "price" => ["required", "numeric"],
+            "image" => ["required", "image"],
+            "category_id" => ["required"],
+            "count" => ["required", "integer", "min:0"]
 
         ];
     }

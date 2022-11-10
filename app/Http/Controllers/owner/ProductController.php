@@ -63,6 +63,7 @@ class ProductController extends Controller
                 "Basic_cases" => $request->input("Basic_cases"),
                 "price" => $request->input("price"),
                 "image" => $fullPath,
+                "count" => $request->input("count"),
                 "category_id" => $request->input("category_id"),
             ]);
         }
@@ -103,6 +104,7 @@ class ProductController extends Controller
             "Basic_cases" => $request->input("Basic_cases"),
             "price" => $request->input("price"),
             "image" => $fullPath,
+            "count" => $request->input("count"),
             "category_id" => $request->input("category_id"),
         ]);
 

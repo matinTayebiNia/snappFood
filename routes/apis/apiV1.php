@@ -13,6 +13,7 @@ Route::prefix("/v.1/")->group(function () {
     Route::post("login/verifyCode", [AuthController::class, "verifyCode"]);
     Route::post("login/resendCode", [AuthController::class, "resendCode"]);
 
+    //carts
     Route::prefix("carts")->group(function () {
         Route::get("/", []);
         Route::get("/{cart}", []);
@@ -40,12 +41,13 @@ Route::prefix("/v.1/")->group(function () {
 
     });
 
+    //Restaurants
     Route::prefix("Restaurants")->group(function () {
         Route::get("/{place}", [PlaceController::class, "show"]);
         Route::get("/", [PlaceController::class, "index"]);
     });
 
+    //foods
     Route::get("/{place}/foods", [ProductController::class, "index"]);
-
 
 });
