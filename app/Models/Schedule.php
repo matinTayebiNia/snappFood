@@ -61,11 +61,13 @@ class Schedule extends Model
             ->first();
     }
 
-    public function scopeCheckSchedule($schedules): bool
+    public function scopeCheckSchedule($query, $schedules): bool
     {
         $isOpen = false;
         foreach ($schedules as $schedule) {
             $isOpen = $schedule->checkIsOpen();
+            if ($isOpen)
+                break;
         }
 
         return $isOpen;

@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Apis\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Apis\ApiV1\Address\StoreAddressRequest;
 use App\Http\Requests\Apis\ApiV1\Address\UpdateAddressRequest;
+use App\Http\Resources\Address\AddressesResource;
 use App\Models\Address;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class AddressController extends Controller
@@ -17,20 +19,15 @@ class AddressController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index(): JsonResponse
+    public function index(): JsonResponse|AnonymousResourceCollection
     {
         try {
 
             $addresses = auth()->user()->addresses()->get();
 
-            $addresses->map(function ($item) {
-                if (auth()->user()->getCurrentAddress($item->id))
-                    $item->CurrentAddress = true;
-            });
-
-            return $this->successMessage($addresses);
+            return AddressesResource::collection($addresses);
 
 
         } catch (Exception $exception) {

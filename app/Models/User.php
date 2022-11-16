@@ -48,6 +48,9 @@ use phpDocumentor\Reflection\Types\This;
  * @method static Builder|User wherePhone($value)
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
+ * @method static Builder|User getCurrentAddress($address_id)
+ * @method static Builder|User whereCurrentAddress($value)
+ * @mixin \Eloquent
  */
 class User extends Authenticatable
 {
@@ -84,7 +87,7 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
-    public function getCurrentAddress($address_id): bool
+    public function scopeGetCurrentAddress($query,$address_id): bool
     {
         return !!$this->where("currentAddress", $address_id)->first();
     }
