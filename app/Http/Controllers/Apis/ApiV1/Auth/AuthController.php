@@ -35,7 +35,7 @@ class AuthController extends Controller
 
             //todo send sms
 
-            /* $api = new GhasedakApi(env("GHSEDAK_API_KEY"));
+             /*$api = new GhasedakApi(env("GHSEDAK_API_KEY"));
              $api->SendSimple($user->phone, "codeTest:{$code}");*/
 
             return $this->successMessage( "sms successfully  sent",201);

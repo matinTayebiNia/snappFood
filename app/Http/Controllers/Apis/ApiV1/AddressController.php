@@ -28,7 +28,6 @@ class AddressController extends Controller
             $addresses->map(function ($item) {
                 if (auth()->user()->getCurrentAddress($item->id))
                     $item->CurrentAddress = true;
-
             });
 
             return $this->successMessage($addresses);
@@ -105,6 +104,9 @@ class AddressController extends Controller
     {
         try {
             $address->update($request->all());
+            auth()->user()->update([
+                "currentAddress" => $address->id
+            ]);
             return $this->successMessage([
                 "msg" => "address updated successfully",
                 "status" => true
