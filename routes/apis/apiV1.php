@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\Apis\ApiV1\AddressController;
-use App\Http\Controllers\Apis\ApiV1\Auth\AuthController;
-use App\Http\Controllers\Apis\ApiV1\PlaceController;
-use App\Http\Controllers\Apis\ApiV1\ProductController;
-use App\Http\Controllers\Apis\ApiV1\UserController;
+use App\Http\Controllers\Apis\V1\AddressController;
+use App\Http\Controllers\Apis\V1\Auth\AuthController;
+use App\Http\Controllers\Apis\V1\PlaceController;
+use App\Http\Controllers\Apis\V1\ProductController;
+use App\Http\Controllers\Apis\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix("/v1/")->group(function () {

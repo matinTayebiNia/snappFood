@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Apis\ApiV1;
+namespace App\Http\Controllers\Apis\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Place\PlaceResource;
+use App\Http\Resources\Place\PlacesResource;
 use App\Models\Place;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class PlaceController extends Controller
@@ -13,35 +17,32 @@ class PlaceController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function index(): JsonResponse
+    public function index(): JsonResponse|AnonymousResourceCollection
     {
         try {
 
-            $places = Place::with(["schedules", "address"]);
+            $places = Place::with(["schedules", "address", "placetypes"]);
 
             if ($word = request("type")) {
                 $places->whereHas("placetypes", function ($query) use ($word) {
                     return $query->where("name", "LIKE", "%{$word}%");
                 });
             }
-            $places = $places->paginate();
-            $places->map(function ($item) {
-                foreach ($item->schedules as $schedule) {
-                    $item->isOpen = $schedule->checkIsOpen();
-                }
-            });
-
             if (request("isOpen") == true) {
-                $places = $places->filter(function ($item) {
-                    return $item->isOpen;
+                $places->whereHas("schedules", function ($query) {
+                    return $query->where("day", now()->dayName)
+                        ->where('endTime', '>', now()->hour)
+                        ->where("startTime", "<", now()->hour);
                 });
-
             }
-            return $this->successMessage($places);
 
-        } catch (\Exception $exception) {
+            $places = $places->paginate();
+
+            return PlacesResource::collection($places);
+
+        } catch (Exception $exception) {
             return $this->throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 'code' => $exception->getCode()
@@ -54,20 +55,16 @@ class PlaceController extends Controller
      * Display the specified resource.
      *
      * @param Place $place
-     * @return JsonResponse
+     * @return PlaceResource|JsonResponse
      */
-    public function show(Place $place): JsonResponse
+    public function show(Place $place): PlaceResource|JsonResponse
     {
         try {
             $place = $place->with(["schedules", "categories", "placetypes"])->first();
 
-            $place->schedules->map(function ($schedule) use ($place) {
-                $place->isOpen = $schedule->checkIsOpen();
-            });
+            return new PlaceResource($place);
 
-            return $this->successMessage($place);
-
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 'code' => $exception->getCode()
