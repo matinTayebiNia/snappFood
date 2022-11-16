@@ -60,7 +60,6 @@ class PlaceController extends Controller
     public function show(Place $place): PlaceResource|JsonResponse
     {
         try {
-            $place = $place->with(["schedules", "categories", "placetypes"])->first();
 
             return new PlaceResource($place);
 
