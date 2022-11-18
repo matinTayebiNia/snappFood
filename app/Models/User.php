@@ -87,9 +87,14 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
-    public function scopeGetCurrentAddress($query,$address_id): bool
+    public function scopeGetCurrentAddress($query, $address_id): bool
     {
         return !!$this->where("currentAddress", $address_id)->first();
+    }
+
+    public function activeCode(): HasMany
+    {
+        return $this->hasMany(ActiveCode::class);
     }
 
 

@@ -30,7 +30,7 @@ class UpdateAddressRequest extends FormRequest
             "city" => ["required"],
             "street" => ["required"],
             "pluck" => ["required"],
-            "currentAddress" => ["boolean"]
+            "currentAddress" => ["nullable","boolean"]
         ];
     }
 }

@@ -52,6 +52,7 @@ class ActiveCode extends Model
     {
         // use the old code when the expired_at is Not finished yet(Avoid duplicate code)
         //this command use the
+        $user->activeCode()->delete();
         if ($code = $this->getAliveCodeForUser($user)) {
             return $code->code;
         } else {
@@ -65,7 +66,7 @@ class ActiveCode extends Model
             ]);
             return $code;
         }
-//        $user->activeCode()->delete();
+
         // generating code for activating phone number and checking code has unique.
 
     }

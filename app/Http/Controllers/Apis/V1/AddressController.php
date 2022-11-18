@@ -101,9 +101,10 @@ class AddressController extends Controller
     {
         try {
             $address->update($request->all());
-            auth()->user()->update([
-                "currentAddress" => $address->id
-            ]);
+            if ($request->input("currentAddress"))
+                auth()->user()->update([
+                    "currentAddress" => $address->id
+                ]);
             return $this->successMessage([
                 "msg" => "address updated successfully",
                 "status" => true
