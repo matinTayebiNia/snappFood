@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\owner\OwnerController;
-use App\Http\Controllers\owner\placeController;
-use App\Http\Controllers\owner\ProductController;
+use App\Http\Controllers\Owner\OwnerController;
+use App\Http\Controllers\Owner\placeController;
+use App\Http\Controllers\Owner\ProductController;
 use Illuminate\Support\Facades\Route;
 
 

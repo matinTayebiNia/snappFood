@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Auth\LoginController;
-use App\Http\Controllers\owner\Auth\LoginController as loginControllerOwner;
+use App\Http\Controllers\Owner\Auth\LoginController as loginControllerOwner;
 use App\Http\Controllers\Admin\CategoryController;
 use Illuminate\Support\Facades\Route;
 
