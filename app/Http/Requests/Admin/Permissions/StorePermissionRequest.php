@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin\permissions;
+namespace App\Http\Requests\Admin\Permissions;
 
 use Illuminate\Foundation\Http\FormRequest;
+use JetBrains\PhpStorm\ArrayShape;
 
-class updatePermissionRequest extends FormRequest
+class StorePermissionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,10 +22,11 @@ class updatePermissionRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    #[ArrayShape(["name" => "string[]"])]
+    public function rules(): array
     {
         return [
-            "name" => ["required", "string", "max:200", "unique:permissions,id," . $this->route("permission")->id]
+            "name"=>["required","string","max:200","unique:permissions,name"]
         ];
     }
 }

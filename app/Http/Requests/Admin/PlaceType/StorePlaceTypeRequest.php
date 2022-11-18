@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin\permissions;
+namespace App\Http\Requests\Admin\PlaceType;
 
 use Illuminate\Foundation\Http\FormRequest;
 use JetBrains\PhpStorm\ArrayShape;
 
-class storePermissionRequest extends FormRequest
+class StorePlaceTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,13 @@ class storePermissionRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    #[ArrayShape(["name" => "string[]"])]
+    #[ArrayShape(["name" => "string[]", "slug" => "string[]", "icon" => "string[]"])]
     public function rules(): array
     {
         return [
-            "name"=>["required","string","max:200","unique:permissions,name"]
+            "name" => ["required", "string", "max:200"],
+            "slug" => ["required", "string", "max:200", "unique:placetypes,slug"],
+            "icon" => ["required", "image"]
         ];
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\placeType;
+namespace App\Http\Requests\Admin\Places;
 
 use Illuminate\Foundation\Http\FormRequest;
-use JetBrains\PhpStorm\ArrayShape;
 
-class storePlaceTypeRequest extends FormRequest
+class UpdatePlaceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +21,13 @@ class storePlaceTypeRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    #[ArrayShape(["name" => "string[]", "slug" => "string[]", "icon" => "string[]"])]
     public function rules(): array
     {
         return [
-            "name" => ["required", "string", "max:200"],
-            "slug" => ["required", "string", "max:200", "unique:placetypes,slug"],
-            "icon" => ["required", "image"]
+            "name"=>["required","string","max:200"],
+            "Number"=>["required","integer","max:200"],
+            "account_number"=>["required","integer","max:200"],
+            "owner_id"=>["required","integer","max:200"],
         ];
     }
 }

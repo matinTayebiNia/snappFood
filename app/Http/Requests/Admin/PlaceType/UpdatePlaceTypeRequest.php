@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\roles;
+namespace App\Http\Requests\Admin\PlaceType;
 
 use Illuminate\Foundation\Http\FormRequest;
-use JetBrains\PhpStorm\ArrayShape;
 
-class updateRoleRequest extends FormRequest
+class UpdatePlaceTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +21,12 @@ class updateRoleRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    #[ArrayShape(["name" => "string[]"])]
     public function rules(): array
     {
         return [
-            "name" => ["required", "string", "max:200", "unique:roles,id," . $this->route("role")->id]
+            "name" => ["required", "string", "max:200"],
+            "slug" => ["required", "string", "max:200", "unique:placetypes,id," . $this->route("placeType")->id],
+            "icon" => [ "image"]
         ];
     }
 }

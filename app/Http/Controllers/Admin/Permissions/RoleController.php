@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin\permissions;
+namespace App\Http\Controllers\Admin\Permissions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\roles\storeRoleRequest;
-use App\Http\Requests\Admin\roles\updateRoleRequest;
+use App\Http\Requests\Admin\Roles\storeRoleRequest;
+use App\Http\Requests\Admin\Roles\updateRoleRequest;
 use App\Models\Role;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;

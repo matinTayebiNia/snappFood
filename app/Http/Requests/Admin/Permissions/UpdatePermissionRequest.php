@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\placeType;
+namespace App\Http\Requests\Admin\Permissions;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class updatePlaceTypeRequest extends FormRequest
+class UpdatePermissionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,12 +21,10 @@ class updatePlaceTypeRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules(): array
+    public function rules()
     {
         return [
-            "name" => ["required", "string", "max:200"],
-            "slug" => ["required", "string", "max:200", "unique:placetypes,id," . $this->route("placeType")->id],
-            "icon" => [ "image"]
+            "name" => ["required", "string", "max:200", "unique:permissions,id," . $this->route("permission")->id]
         ];
     }
 }

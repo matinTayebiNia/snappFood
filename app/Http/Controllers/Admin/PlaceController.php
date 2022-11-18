@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\places\updatePlaceRequest;
+use App\Http\Requests\Admin\Places\updatePlaceRequest;
 use App\Models\Place;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\discount\storeDiscountRequest;
-use App\Http\Requests\Admin\discount\updateDiscountRequest;
+use App\Http\Requests\Admin\Discount\StoreDiscountRequest;
+use App\Http\Requests\Admin\Discount\UpdateDiscountRequest;
 use App\Models\Discount;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -58,10 +58,10 @@ class DiscountController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param storeDiscountRequest $request
+     * @param StoreDiscountRequest $request
      * @return RedirectResponse|Redirector|Application
      */
-    public function store(storeDiscountRequest $request): Application|RedirectResponse|Redirector
+    public function store(StoreDiscountRequest $request): Application|RedirectResponse|Redirector
     {
         Discount::create([
             "code" => $request->input("code"),
@@ -99,11 +99,11 @@ class DiscountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param updateDiscountRequest $request
+     * @param UpdateDiscountRequest $request
      * @param Discount $discount
      * @return RedirectResponse|Redirector|Application
      */
-    public function update(updateDiscountRequest $request, Discount $discount): Application|RedirectResponse|Redirector
+    public function update(UpdateDiscountRequest $request, Discount $discount): Application|RedirectResponse|Redirector
     {
         $discount->update([
             "code" => $request->input("code"),
