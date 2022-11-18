@@ -5,16 +5,17 @@ namespace App\Http\Controllers\Apis\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Products\ProductsResource;
 use App\Models\Category;
-use App\Models\Product;
+use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProductController extends Controller
 {
     /**
      * @param $place
-     * @return ProductsResource|JsonResponse
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function foods($place): JsonResponse|ProductsResource
+    public function foods($place): JsonResponse|AnonymousResourceCollection
     {
         try {
             $foods = Category::where("type", "ForFood")
@@ -25,9 +26,9 @@ class ProductController extends Controller
                     return $query->where("place_id", $place);
                 })->get();
 
-            return new ProductsResource($foods);
+            return  ProductsResource::collection($foods);
 
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
