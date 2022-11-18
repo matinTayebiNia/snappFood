@@ -69,6 +69,8 @@ class AuthController extends Controller
 
             //create token and send for user
             $token = $user->createToken(env("APP_KEY_TOKEN"))->plainTextToken;
+//
+            $user->activeCode()->delete();
 
             return $this->successMessage(["token" => $token]);
 
