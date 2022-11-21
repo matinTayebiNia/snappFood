@@ -128,13 +128,13 @@ class AddressController extends Controller
         try {
 
             $address->delete();
-            return $this->successMessage([
+            return successMessage([
                 "msg" => "address deleted successfully",
                 "status" => true
             ]);
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);

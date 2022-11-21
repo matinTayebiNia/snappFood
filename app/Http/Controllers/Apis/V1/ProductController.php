@@ -29,7 +29,7 @@ class ProductController extends Controller
             return  ProductsResource::collection($foods);
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);

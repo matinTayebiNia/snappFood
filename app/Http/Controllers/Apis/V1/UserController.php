@@ -20,10 +20,10 @@ class UserController extends Controller
 
             auth()->user()->update($request->all());
 
-            return $this->successMessage("your information updated successfully ");
+            return successMessage("your information updated successfully ");
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);

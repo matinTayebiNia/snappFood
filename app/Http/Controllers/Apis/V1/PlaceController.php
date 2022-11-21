@@ -64,7 +64,7 @@ class PlaceController extends Controller
             return new PlaceResource($place);
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 'code' => $exception->getCode()
             ]);

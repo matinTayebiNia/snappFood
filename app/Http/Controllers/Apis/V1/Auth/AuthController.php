@@ -38,10 +38,10 @@ class AuthController extends Controller
              /*$api = new GhasedakApi(env("GHSEDAK_API_KEY"));
              $api->SendSimple($user->phone, "codeTest:{$code}");*/
 
-            return $this->successMessage( "sms successfully  sent",201);
+            return successMessage( "sms successfully  sent",201);
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);
@@ -72,10 +72,10 @@ class AuthController extends Controller
 //
             $user->activeCode()->delete();
 
-            return $this->successMessage(["token" => $token]);
+            return successMessage(["token" => $token]);
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);
@@ -105,10 +105,10 @@ class AuthController extends Controller
             /* $api = new GhasedakApi(env("GHSEDAK_API_KEY"));
              $api->SendSimple($phone, "codeTest:{$code}");*/
 
-            return $this->successMessage(" sms successfully sent again");
+            return successMessage(" sms successfully sent again");
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);
