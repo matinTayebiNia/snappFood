@@ -26,16 +26,11 @@ class PlaceController extends Controller
             $places = Place::with(["schedules", "address", "placetypes"]);
 
             if ($word = request("type")) {
-                $places->whereHas("placetypes", function ($query) use ($word) {
-                    return $query->where("name", "LIKE", "%{$word}%");
-                });
+                $places = Place::PlaceTypeSearch($word);
             }
+
             if (request("isOpen") == true) {
-                $places->whereHas("schedules", function ($query) {
-                    return $query->where("day", now()->dayName)
-                        ->where('endTime', '>', now()->hour)
-                        ->where("startTime", "<", now()->hour);
-                });
+                $places = Place::PlaceIsOpen();
             }
 
             $places = $places->paginate();
@@ -43,7 +38,7 @@ class PlaceController extends Controller
             return PlacesResource::collection($places);
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 'code' => $exception->getCode()
             ]);

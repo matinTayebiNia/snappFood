@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Place;
 
+use App\Models\Place;
 use App\Models\Schedule;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,7 +18,7 @@ class PlaceResource extends JsonResource
     {
         return [
             "id" => (string)$this->id,
-            "isOpen" => Schedule::CheckSchedule($this->schedules),
+            "isOpen" => Place::PlaceIsOpen(),
             "title" => $this->name,
             "image" => $this->image,
             "type" => PlaceTypesResource::collection($this->placetypes),

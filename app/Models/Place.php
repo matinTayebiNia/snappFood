@@ -45,6 +45,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Place whereNumber($value)
  * @method static Builder|Place whereOwnerId($value)
  * @method static Builder|Place whereUpdatedAt($value)
+ * @method static Builder|Place PlaceTypeSearch(string $word)
+ * @method static Builder|Place PlaceIsOpen()
  * @mixin Eloquent
  */
 class Place extends Model
@@ -55,8 +57,8 @@ class Place extends Model
         "name", "Number", 'account_number', "owner_id", "image"
     ];
 
-    protected $hidden=[
-        "created_at","updated_at","owner_id"
+    protected $hidden = [
+        "created_at", "updated_at", "owner_id"
     ];
 
     public function owner(): BelongsTo
@@ -89,7 +91,21 @@ class Place extends Model
         return $this->hasMany(Schedule::class);
     }
 
+    public function scopePlaceTypeSearch($query, string $word)
+    {
+        return $query->whereHas("placetypes", function ($query) use ($word) {
+            return $query->where("name", "LIKE", "%{$word}%");
+        });
+    }
 
+    public function scopePlaceIsOpen($query)
+    {
+        $query->whereHas("schedules", function ($query) {
+            return !!$query->where("day", now()->dayName)
+                ->where('endTime', '>', now()->hour)
+                ->where("startTime", "<", now()->hour);
+        });
+    }
 
 
 }

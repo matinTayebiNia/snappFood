@@ -52,25 +52,4 @@ class Schedule extends Model
         return $this->belongsTo(Place::class);
     }
 
-    public function checkIsOpen(): bool
-    {
-
-        return !!$this->where("day", now()->dayName)
-            ->where('endTime', '>', now()->hour)
-            ->where("startTime", "<", now()->hour)
-            ->first();
-    }
-
-    public function scopeCheckSchedule($query, $schedules): bool
-    {
-        $isOpen = false;
-        foreach ($schedules as $schedule) {
-            $isOpen = $schedule->checkIsOpen();
-            if ($isOpen)
-                break;
-        }
-
-        return $isOpen;
-    }
-
 }
