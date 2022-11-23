@@ -31,7 +31,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Schedule whereUpdatedAt($value)
  * @mixin Eloquent
  * @property-read Place $place
- * @method static Builder|Schedule checkSchedule($schedules)
+ * @method static Builder|Schedule checkSchedule()
  */
 class Schedule extends Model
 {
@@ -50,6 +50,15 @@ class Schedule extends Model
     public function place(): BelongsTo
     {
         return $this->belongsTo(Place::class);
+    }
+
+    public function scopeCheckSchedule($query): bool
+    {
+        return !! $query->where("day", now()->dayName)
+            ->where('endTime', '>', now()->hour)
+            ->where("startTime", "<", now()->hour)
+            ->first();
+
     }
 
 }

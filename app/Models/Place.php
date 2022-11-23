@@ -101,7 +101,7 @@ class Place extends Model
     public function scopePlaceIsOpen($query)
     {
         $query->whereHas("schedules", function ($query) {
-            return !!$query->where("day", now()->dayName)
+            return $query->where("day", now()->dayName)
                 ->where('endTime', '>', now()->hour)
                 ->where("startTime", "<", now()->hour);
         });

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Apis\V1\AddressController;
 use App\Http\Controllers\Apis\V1\Auth\AuthController;
+use App\Http\Controllers\Apis\V1\CartController;
 use App\Http\Controllers\Apis\V1\PlaceController;
 use App\Http\Controllers\Apis\V1\ProductController;
 use App\Http\Controllers\Apis\V1\UserController;
@@ -15,10 +16,11 @@ Route::prefix("/v1/")->group(function () {
 
     //carts
     Route::prefix("carts")->group(function () {
-        Route::get("/", []);
-        Route::get("/{cart}", []);
-        Route::post("/add", []);
-        Route::patch("/add", []);
+        Route::get("/", [CartController::class, "index"]);
+        Route::get("/{cart}", [CartController::class, "show"]);
+        Route::post("/add", [CartController::class, "store"]);
+        Route::patch("/add/{cart}", [CartController::class, "update"]);
+        Route::delete("/delete/{product}", [CartController::class, "destroy"]);
     });
 
     Route::middleware("auth:sanctum")->group(function () {
@@ -32,7 +34,7 @@ Route::prefix("/v1/")->group(function () {
             Route::patch("/{address}/update", [AddressController::class, "update"]);
         });
 
-        Route::post("carts/{cart}/pay", []);
+        Route::post("carts/{cart}/pay", [CartController::class, "pay"]);
 
         Route::prefix("comments")->group(function () {
             Route::get("/", []);
