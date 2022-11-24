@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Owner\OrderController;
 use App\Http\Controllers\Owner\OwnerController;
 use App\Http\Controllers\Owner\placeController;
 use App\Http\Controllers\Owner\ProductController;
@@ -12,7 +13,7 @@ Route::get("/profile/edit", [OwnerController::class, "edit"])
     ->name("profile.edit");
 Route::patch("/profile/update", [OwnerController::class, "update"])
     ->name("profile.update");
-
+Route::get("/orders",[OrderController::class,"index"])->name("orders.index");
 Route::resource("placesOwner", placeController::class)
     ->except(["index", "destroy"]);
 

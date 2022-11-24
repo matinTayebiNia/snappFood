@@ -104,15 +104,17 @@ class CartService
 
     /**
      * @param Model $key
-     * @return void
+     * @return bool
      */
-    public function forget(Model $key): void
+    public function forget(Model $key): bool
     {
         $cart = $this->get($key, false);
         if ($cart) {
             $this->cart = $this->cart->forget($cart);
             session()->put("cart", $this->cart);
+            return true;
         }
+        return false;
     }
 
 
@@ -124,6 +126,11 @@ class CartService
                 "count" => $cart["count"] + $option
             ]);
         }
+
+        if (is_array($option)) {
+            $cart = $cart->merge($option);
+        }
+
         $this->put($cart->toArray(), $key);
 
         return $this;
@@ -131,8 +138,8 @@ class CartService
 
     public function TheCostOfTheNumberOfMealsOfThisCart(Model $key): float|int
     {
-        $cart = $this->get($key, false);
-        return $cart['price'] * $cart['count'];
+        $cart = $this->get($key);
+        return $cart['dataOfCart']->price * $cart['count'];
     }
 
     public function count($key): int
@@ -144,7 +151,7 @@ class CartService
     public function totalPrice()
     {
         return $this->all()->sum(function ($cart) {
-            return $cart['price'] * $cart['count'];
+            return $cart['dataOfCart']->price * $cart['count'];
         });
     }
 

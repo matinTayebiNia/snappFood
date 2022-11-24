@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -44,15 +45,16 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        "name", "Basic_cases", "price", "image", "category_id", "place_id","count"
+        "name", "Basic_cases", "price", "image", "category_id", "place_id", "count"
     ];
 
-    protected $hidden=[
-      "created_at",
-      "updated_at",
-      "place_id",
-      "category_id",
+    protected $hidden = [
+        "created_at",
+        "updated_at",
+        "place_id",
+        "category_id",
     ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -61,5 +63,10 @@ class Product extends Model
     public function place(): BelongsTo
     {
         return $this->belongsTo(Place::class);
+    }
+
+    public function orders(): BelongsToMany
+    {
+        return $this->belongsToMany(Order::class);
     }
 }

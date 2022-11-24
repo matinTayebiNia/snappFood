@@ -35,7 +35,7 @@ Route::prefix("/v1/")->group(function () {
             Route::patch("/{address}/update", [AddressController::class, "update"]);
         });
 
-        Route::post("carts/{cart}/pay", [CartController::class, "pay"]);
+        Route::post("carts/pay", [CartController::class, "pay"]);
 
         Route::prefix("comments")->group(function () {
             Route::get("/", []);

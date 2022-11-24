@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Apis\V1;
 
 use App\classes\Cart\Cart;
+use App\Events\NewOrderEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Apis\ApiV1\Cart\AddToCartRequest;
 use App\Http\Resources\Cart\CartsResource;
+use App\Listeners\NewOrderListener;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -64,7 +66,6 @@ class CartController extends Controller
                 Cart::put(
                     [
                         "count" => intval($request->input("count")),
-                        "price" => $product->price,
                     ]
                     , $product);
             }
@@ -90,7 +91,9 @@ class CartController extends Controller
             if (Cart::has($product)) {
                 if ((Cart::count($product) + intval($request->input("count")))
                     <= $product->count) {
-                    Cart::update($product, intval($request->input("count")));
+                    Cart::update($product, [
+                        "count" => intval($request->input("count")),
+                    ]);
                     return successMessage("your cart updated");
                 } else
                     throw  ValidationException::withMessages([
@@ -138,9 +141,34 @@ class CartController extends Controller
         }
     }
 
-    public function pay($cart)
+    public function pay(): JsonResponse
     {
-        //todo implement pay method: add job for payment carts
+        try {
+            $cartItems = Cart::all();
+            if ($cartItems->count()) {
+                $price = Cart::totalPrice();
+
+                $orderItems = $cartItems->mapWithKeys(function ($item) {
+                    return [$item["dataOfCart"]->id => ['quantity' => $item["count"]]];
+                });
+
+                $order = auth()->user()->orders()->create([
+                    "status" => "unpaid",
+                    "price" => $price,
+                ]);
+
+                $order->products()->attach($orderItems->toArray());
+                event(new NewOrderEvent($order));
+                Cart::flush();
+                return successMessage("your order has been registered");
+            }
+            return successMessage("your cart is empty");
+        } catch (\Exception $exception) {
+            return throwErrorMessageException([
+                "message" => $exception->getMessage(),
+                "code" => $exception->getCode()
+            ]);
+        }
     }
 
 }

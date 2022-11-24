@@ -97,5 +97,10 @@ class User extends Authenticatable
         return $this->hasMany(ActiveCode::class);
     }
 
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
 
 }
