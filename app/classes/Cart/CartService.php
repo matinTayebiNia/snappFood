@@ -3,7 +3,6 @@
 namespace App\classes\Cart;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -24,25 +23,24 @@ class CartService
 
     /**
      * @param array $value
-     * @param $obj
+     * @param Model $obj
      * @return $this
      */
-    public function put(array $value, $obj = null): static
+    public function put(array $value, Model $obj): static
     {
 
-        if ($obj instanceof Model) {
-
+        if (!isset($value["id"]))
             $value = array_merge($value, [
                 "id" => Str::random(10),
                 "subject_id" => $obj->id,
                 "subject_type" => get_class($obj)
             ]);
-
-        } else {
+        else
             $value = array_merge($value, [
-                "id" => Str::random(10)
+                "subject_id" => $obj->id,
+                "subject_type" => get_class($obj)
             ]);
-        }
+
 
         $this->cart->put($value["id"], $value);
         session()->put("cart", $this->cart);
@@ -51,53 +49,138 @@ class CartService
 
     }
 
+    /**
+     * @param $key
+     * @return bool
+     */
     public function has($key): bool
     {
-        if ($key instanceof Model) {
-            return !is_null(
-                $this->getSubjectOfCart($key)
-            );
-        }
-
         return !is_null(
-            $this->cart->firstWhere("id", $key)
+            $this->cart->where("subject_id", $key->id)
+                ->where("subject_type", get_class($key))->first()
         );
     }
 
-    public function get($key): mixed
+    /**
+     * @param $key
+     * @param bool $withRelatedData
+     * @return array|mixed|null
+     */
+    public function get($key, bool $withRelatedData = true): mixed
     {
-        return $key instanceof Model
-            ? $this->getSubjectOfCart($key)
-            : $this->cart->firstWhere("id", $key);
+        if ($this->has($key)) {
+            $cart = $this->cart->where("subject_id", $key->id)
+                ->where("subject_type", get_class($key))->first();
+
+            return $withRelatedData ?
+                $this->getSubjectOfData($cart) :
+                $cart;
+        }
+        return null;
     }
 
-    public function all(): mixed
-    {
-        return $this->cart;
-    }
-
-    public function getAllCartsWithRelationsSubject(array|string $relations): Collection
+    /**
+     * @param array|string|null $relations
+     * @return mixed
+     */
+    public function all(array|string|null $relations = null): mixed
     {
         if (is_string($relations))
             $relations = explode("|", $relations);
 
         return $this->cart->map(function ($cart) use ($relations) {
-            $subject = $cart['subject_type'];
-            $cart["dataOfCart"] = $subject::where("id", $cart["subject_id"])->with($relations)->first();
-            unset($cart['subject_type'], $cart["subject_id"]);
-            return $cart;
+            return $this->getCartsWithSubjectRelations($cart, $relations);
         });
+    }
 
+    /**
+     * @return void
+     */
+    public function flush(): void
+    {
+        $this->cart = collect([]);
+        session()->put("cart", $this->cart);
     }
 
     /**
      * @param Model $key
+     * @return void
+     */
+    public function forget(Model $key): void
+    {
+        $cart = $this->get($key, false);
+        if ($cart) {
+            $this->cart = $this->cart->forget($cart);
+            session()->put("cart", $this->cart);
+        }
+    }
+
+
+    public function update(Model $key, $option): static
+    {
+        $cart = collect($this->get($key, false));
+        if (is_numeric($option)) {
+            $cart = $cart->merge([
+                "count" => $cart["count"] + $option
+            ]);
+        }
+        $this->put($cart->toArray(), $key);
+
+        return $this;
+    }
+
+    public function TheCostOfTheNumberOfMealsOfThisCart(Model $key): float|int
+    {
+        $cart = $this->get($key, false);
+        return $cart['price'] * $cart['count'];
+    }
+
+    public function count($key): int
+    {
+        if (!$this->has($key)) return 0;
+        return intval($this->get($key, false)["count"]);
+    }
+
+    public function totalPrice()
+    {
+        return $this->all()->sum(function ($cart) {
+            return $cart['price'] * $cart['count'];
+        });
+    }
+
+    /**
+     * @param $cart
+     * @return array|null
+     */
+    private function getSubjectOfData($cart): ?array
+    {
+        return $cart ? array_merge($cart, ["dataOfCart" =>
+            $cart['subject_type']::where("id", $cart["subject_id"])
+                ->first()]) : null;
+    }
+
+    /**
+     * @param $cart
+     * @param array|string $relations
+     * @return array|null
+     */
+    private function getSubjectOfDataWithRelation($cart, array|string $relations): ?array
+    {
+        return $cart ? array_merge($cart, ["dataOfCart" =>
+            $cart['subject_type']::where("id", $cart["subject_id"])
+                ->with($relations)->first()]) : null;
+    }
+
+    /**
+     * @param $cart
+     * @param array|string|null $relations
      * @return mixed
      */
-    private function getSubjectOfCart(Model $key): mixed
+    private function getCartsWithSubjectRelations($cart, array|string|null $relations): mixed
     {
-        return $this->cart->where("subject_id", $key->id)
-            ->where("subject_type", get_class($key))->first();
+        return !is_null($relations) ?
+            $this->getSubjectOfDataWithRelation($cart, $relations) :
+            $this->getSubjectOfData($cart);
     }
 
 

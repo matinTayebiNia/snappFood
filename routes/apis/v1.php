@@ -17,10 +17,11 @@ Route::prefix("/v1/")->group(function () {
     //carts
     Route::prefix("carts")->group(function () {
         Route::get("/", [CartController::class, "index"]);
-        Route::get("/{cart}", [CartController::class, "show"]);
+        Route::get("/{product}", [CartController::class, "show"]);
         Route::post("/add", [CartController::class, "store"]);
-        Route::patch("/add/{cart}", [CartController::class, "update"]);
+        Route::patch("/add", [CartController::class, "update"]);
         Route::delete("/delete/{product}", [CartController::class, "destroy"]);
+        Route::delete("/delete", [CartController::class, "flush"]);
     });
 
     Route::middleware("auth:sanctum")->group(function () {

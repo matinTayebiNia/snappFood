@@ -7,11 +7,16 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static mixed get(Model|string $key);
- * @method static CartService put(array $value, Model $obj = null);
- * @method static Collection all();
- * @method static Collection getAllCartsWithRelationsSubject(array|string $relations);
- * @method static bool has(Model|string $key);
+ * @method static mixed get(Model $key,bool $withRelatedData=true);
+ * @method static CartService put(array $value, Model $obj);
+ * @method static Collection all($relations = null);
+ * @method static bool has(Model $key);
+ * @method static void flush();
+ * @method static void forget(Model $key);
+ * @method static CartService update(Model $key,$option);
+ * @method static int count(Model $key);
+ * @method static float|int TheCostOfTheNumberOfMealsOfThisCart(Model $key);
+ * @method static float|int totalPrice();
  */
 class Cart extends Facade
 {

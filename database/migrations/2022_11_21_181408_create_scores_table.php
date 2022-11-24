@@ -14,7 +14,13 @@ return new class extends Migration {
     {
         Schema::create('scores', function (Blueprint $table) {
             $table->id();
-            //todo : add columns in scores table (polymorphic)
+            $table->unsignedBigInteger("user_id");
+            $table->unsignedTinyInteger("score");
+            $table->foreign("user_id")
+                ->references("id")
+                ->on("users")->cascadeOnDelete();
+            $table->integer("scoreable_id");
+            $table->string("scoreable_type");
             $table->timestamps();
         });
     }

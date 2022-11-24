@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Product
@@ -17,24 +20,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $category_id
  * @property int $count
  * @property int $place_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Category $category
- * @property-read \App\Models\Place $place
- * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Product query()
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereBasicCases($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product wherePlaceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product wherePrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Category $category
+ * @property-read Place $place
+ * @method static Builder|Product newModelQuery()
+ * @method static Builder|Product newQuery()
+ * @method static Builder|Product query()
+ * @method static Builder|Product whereBasicCases($value)
+ * @method static Builder|Product whereCategoryId($value)
+ * @method static Builder|Product whereCount($value)
+ * @method static Builder|Product whereCreatedAt($value)
+ * @method static Builder|Product whereId($value)
+ * @method static Builder|Product whereImage($value)
+ * @method static Builder|Product whereName($value)
+ * @method static Builder|Product wherePlaceId($value)
+ * @method static Builder|Product wherePrice($value)
+ * @method static Builder|Product whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class Product extends Model
 {

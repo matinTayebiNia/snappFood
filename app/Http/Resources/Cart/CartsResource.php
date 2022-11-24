@@ -2,17 +2,23 @@
 
 namespace App\Http\Resources\Cart;
 
+use App\classes\Cart\Cart;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JetBrains\PhpStorm\ArrayShape;
+use JsonSerializable;
 
 class CartsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param Request $request
+     * @return array|Arrayable|JsonSerializable
      */
-    public function toArray($request)
+    #[ArrayShape(["id" => "mixed", "restaurant" => "array", "food" => "array", "HowManyOrdered" => "mixed", "PriceOfAll" => "float|int"])]
+    public function toArray($request): array|JsonSerializable|Arrayable
     {
 
         return [
@@ -28,7 +34,7 @@ class CartsResource extends JsonResource
                 "price" => $this->resource["dataOfCart"]->price,
             ],
             "HowManyOrdered" => $this->resource["count"],
-            "PriceOfAll" => $this->resource["price"],
+            "PriceOfAll" => Cart::TheCostOfTheNumberOfMealsOfThisCart($this->resource["dataOfCart"]),
         ];
     }
 }
