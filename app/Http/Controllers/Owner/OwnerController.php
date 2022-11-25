@@ -19,7 +19,8 @@ class OwnerController extends Controller
      */
     public function index(): Factory|View|Application
     {
-        return view('owner.index');
+        $unreadNotifications = auth()->user()->unreadNotifications;
+        return view('owner.index', compact("unreadNotifications"));
     }
 
 
@@ -50,5 +51,14 @@ class OwnerController extends Controller
             ->with("success", "profile updated");
     }
 
+    public function markNotificationAsRead($id): RedirectResponse
+    {
+        auth()->user()->unreadNotifications
+            ->when($id, function ($query) use ($id) {
+                return $query->where("id", $id);
+            })
+            ->markAsRead();
+        return back();
+    }
 
 }

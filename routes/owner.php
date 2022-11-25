@@ -13,7 +13,10 @@ Route::get("/profile/edit", [OwnerController::class, "edit"])
     ->name("profile.edit");
 Route::patch("/profile/update", [OwnerController::class, "update"])
     ->name("profile.update");
-Route::get("/orders",[OrderController::class,"index"])->name("orders.index");
+Route::patch("/notification/{id}", [OwnerController::class, "markNotificationAsRead"])
+    ->name("notification.read");
+Route::get("/orders", [OrderController::class, "index"])->name("orders.index");
+Route::get("/orders/edit/{order}", [OrderController::class, "edit"])->name("orders.edit");
 Route::resource("placesOwner", placeController::class)
     ->except(["index", "destroy"]);
 

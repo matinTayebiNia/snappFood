@@ -40,33 +40,35 @@ class placeController extends Controller
     public function store(storePlaceRequest $request): Redirector|RedirectResponse|Application
     {
 
-        $image = $request->file("image");
-        $fullPath = $this->StoreImage($image);
-        $place = $request->user("owner")->place()->create([
-            "name" => $request->input("name"),
-            "Number" => $request->input("Number"),
-            "account_number" => $request->input("account_number"),
-            "image" => $fullPath
-        ]);
-        $place->categories()->attach($request->input("categories"));
-        $place->placeTypes()->attach($request->input("types"));
-        $place->address()->create([
-            "city" => $request->input("city"),
-            "state" => $request->input("state"),
-            "street" => $request->input("street"),
-            "pluck" => $request->input("pluck"),
-            "height" => mt_rand(10000,99999),
-            "width" => mt_rand(10000,99999),
-        ]);
+        if (!auth("owner")->user()->place) {
 
-        foreach ($this->removeEmptySchedules($request->input("schedules")) as $key => $item) {
-            $place->schedules()->create([
-                "day" => $key,
-                "startTime"=>$item["startTime"],
-                "endTime"=>$item["endTime"],
+            $image = $request->file("image");
+            $fullPath = $this->StoreImage($image);
+            $place = $request->user("owner")->place()->create([
+                "name" => $request->input("name"),
+                "Number" => $request->input("Number"),
+                "account_number" => $request->input("account_number"),
+                "image" => $fullPath
             ]);
-        }
+            $place->categories()->attach($request->input("categories"));
+            $place->placeTypes()->attach($request->input("types"));
+            $place->address()->create([
+                "city" => $request->input("city"),
+                "state" => $request->input("state"),
+                "street" => $request->input("street"),
+                "pluck" => $request->input("pluck"),
+                "height" => mt_rand(10000, 99999),
+                "width" => mt_rand(10000, 99999),
+            ]);
 
+            foreach ($this->removeEmptySchedules($request->input("schedules")) as $key => $item) {
+                $place->schedules()->create([
+                    "day" => $key,
+                    "startTime" => $item["startTime"],
+                    "endTime" => $item["endTime"],
+                ]);
+            }
+        }
         return redirect(route("owner.home"));
     }
 
@@ -123,15 +125,15 @@ class placeController extends Controller
             "state" => $request->input("state"),
             "street" => $request->input("street"),
             "pluck" => $request->input("pluck"),
-            "height" => mt_rand(10000,99999),
-            "width" => mt_rand(10000,99999),
+            "height" => mt_rand(10000, 99999),
+            "width" => mt_rand(10000, 99999),
         ]);
         //todo implement: update place schedule
         foreach ($this->removeEmptySchedules($request->input("schedules")) as $key => $item) {
             $placesOwner->schedules()->create([
                 "day" => $key,
-                "startTime"=>$item["startTime"],
-                "endTime"=>$item["endTime"],
+                "startTime" => $item["startTime"],
+                "endTime" => $item["endTime"],
             ]);
         }
 

@@ -2,25 +2,26 @@
 
 namespace App\Notifications\Cart;
 
+use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SendOrderStatusNotification extends Notification
+class SendOrderStatusNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $cart;
+    private Order $order;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($cart)
+    public function __construct(Order $order)
     {
-        $this->cart = $cart;
+        $this->order = $order;
     }
 
     /**
@@ -31,7 +32,7 @@ class SendOrderStatusNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['mail'];
     }
 
     /**
@@ -44,6 +45,8 @@ class SendOrderStatusNotification extends Notification
     {
         return (new MailMessage)
             ->line('The introduction to the notification.')
+            ->line("<p> سفارشات شما {$this->order}</p>")
+            ->line("محصولات {$this->order->products}")
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');
     }

@@ -9,6 +9,7 @@ use App\Http\Requests\Apis\ApiV1\Cart\AddToCartRequest;
 use App\Http\Resources\Cart\CartsResource;
 use App\Listeners\NewOrderListener;
 use App\Models\Product;
+use App\Notifications\Cart\SendOrderStatusNotification;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -159,6 +160,7 @@ class CartController extends Controller
 
                 $order->products()->attach($orderItems->toArray());
                 event(new NewOrderEvent($order));
+                auth()->user()->notify(new SendOrderStatusNotification($order));
                 Cart::flush();
                 return successMessage("your order has been registered");
             }
