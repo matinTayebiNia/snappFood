@@ -2,6 +2,7 @@
 
 namespace App\classes\Cart;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Psr\Container\ContainerExceptionInterface;
@@ -53,7 +54,7 @@ class CartService
      * @param $key
      * @return bool
      */
-    public function has($key): bool
+    public function has(Model $key): bool
     {
         return !is_null(
             $this->cart->where("subject_id", $key->id)

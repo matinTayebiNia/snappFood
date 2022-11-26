@@ -3,6 +3,7 @@
 use App\Http\Controllers\Apis\V1\AddressController;
 use App\Http\Controllers\Apis\V1\Auth\AuthController;
 use App\Http\Controllers\Apis\V1\CartController;
+use App\Http\Controllers\Apis\V1\CommentController;
 use App\Http\Controllers\Apis\V1\PlaceController;
 use App\Http\Controllers\Apis\V1\ProductController;
 use App\Http\Controllers\Apis\V1\UserController;
@@ -39,7 +40,7 @@ Route::prefix("/v1/")->group(function () {
 
         Route::prefix("comments")->group(function () {
             Route::get("/", []);
-            Route::post("/", []);
+            Route::post("/", [CommentController::class]);
         });
 
     });

@@ -47,7 +47,6 @@ class SendOrderStatusNotification extends Notification implements ShouldQueue
             ->line('The introduction to the notification.')
             ->line("<p> سفارشات شما {$this->order}</p>")
             ->line("محصولات {$this->order->products}")
-            ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');
     }
 

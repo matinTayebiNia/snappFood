@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('places', function (Blueprint $table) {
-            $table->unsignedInteger("score");
+            $table->unsignedInteger("score")->default(0);
         });
     }
 
