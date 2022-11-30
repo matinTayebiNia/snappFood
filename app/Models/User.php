@@ -56,6 +56,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $dispatchesEvents = [
+
+    ];
     /**
      * The attributes that are mass assignable.
      *
@@ -89,7 +92,7 @@ class User extends Authenticatable
 
     public function scopeGetCurrentAddress($query, $address_id): bool
     {
-        return !!$this->where("currentAddress", $address_id)->first();
+        return !!$query->where("currentAddress", $address_id)->first();
     }
 
     public function activeCode(): HasMany
@@ -105,6 +108,11 @@ class User extends Authenticatable
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function scores(): HasMany
+    {
+        return $this->hasMany(Score::class);
     }
 
 

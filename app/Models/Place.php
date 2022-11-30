@@ -55,7 +55,7 @@ class Place extends Model
     use HasFactory;
 
     protected $fillable = [
-        "name", "Number", 'account_number', "owner_id", "image"
+        "name", "Number", 'account_number', "owner_id", "image","score"
     ];
 
     protected $hidden = [
@@ -111,6 +111,11 @@ class Place extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function scores(): MorphMany
+    {
+        return $this->morphMany(Score::class,"scoreable");
     }
 
 }

@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\NewCommentForOwnerEvent;
 use App\Events\NewOrderEvent;
+use App\Listeners\NewCommentForOwnerListener;
 use App\Listeners\NewOrderListener;
 use App\Notifications\Cart\SendOrderStatusNotification;
 use Illuminate\Auth\Events\Registered;
@@ -23,7 +25,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewOrderEvent::class => [
             NewOrderListener::class
+        ],
+
+        NewCommentForOwnerEvent::class => [
+            NewCommentForOwnerListener::class
         ]
+
     ];
 
     /**

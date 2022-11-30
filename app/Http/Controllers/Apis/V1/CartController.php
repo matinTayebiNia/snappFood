@@ -142,23 +142,20 @@ class CartController extends Controller
         }
     }
 
-    public function pay(): JsonResponse
+    public function pay(Product $product): JsonResponse
     {
         try {
-            $cartItems = Cart::all();
-            if ($cartItems->count()) {
-                $price = Cart::totalPrice();
-
-                $orderItems = $cartItems->mapWithKeys(function ($item) {
-                    return [$item["dataOfCart"]->id => ['quantity' => $item["count"]]];
-                });
+            $cartItems = Cart::get($product);
+            if (Cart::has($product)) {
+                $price = Cart::TheCostOfTheNumberOfMealsOfThisCart($product);
+                $orderItems = [$cartItems["dataOfCart"]->id => ['quantity' => $cartItems["count"]]];
 
                 $order = auth()->user()->orders()->create([
                     "status" => "unpaid",
                     "price" => $price,
                 ]);
 
-                $order->products()->attach($orderItems->toArray());
+                $order->products()->attach($orderItems);
                 event(new NewOrderEvent($order));
                 auth()->user()->notify(new SendOrderStatusNotification($order));
                 Cart::flush();

@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->foreign("place_id")
                 ->references("id")
                 ->on("places")->cascadeOnDelete();
+            $table->unsignedTinyInteger("score")->default(1);
             $table->timestamps();
         });
     }

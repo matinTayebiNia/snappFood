@@ -46,7 +46,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        "name", "Basic_cases", "price", "image", "category_id", "place_id", "count"
+        "name", "Basic_cases", "price", "image", "category_id", "place_id", "count","score"
     ];
 
     protected $hidden = [
@@ -74,5 +74,10 @@ class Product extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function scores(): MorphMany
+    {
+        return $this->morphMany(Score::class,"scoreable");
     }
 }
