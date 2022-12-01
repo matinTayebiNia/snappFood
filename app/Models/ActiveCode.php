@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|ActiveCode whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ActiveCode whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ActiveCode whereUserId($value)
+ * @mixin \Eloquent
  */
 
 class ActiveCode extends Model

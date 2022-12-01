@@ -17,6 +17,7 @@ Route::patch("/notification/{id}", [OwnerController::class, "markNotificationAsR
     ->name("notification.read");
 Route::get("/orders", [OrderController::class, "index"])->name("orders.index");
 Route::get("/orders/edit/{order}", [OrderController::class, "edit"])->name("orders.edit");
+Route::patch("/orders/update/{order}", [OrderController::class, "update"])->name("orders.update");
 Route::resource("placesOwner", placeController::class)
     ->except(["index", "destroy"]);
 

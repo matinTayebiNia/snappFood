@@ -40,6 +40,14 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Product wherePrice($value)
  * @method static Builder|Product whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property int $score
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
+ * @property-read int|null $orders_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Score[] $scores
+ * @property-read int|null $scores_count
+ * @method static Builder|Product whereScore($value)
  */
 class Product extends Model
 {

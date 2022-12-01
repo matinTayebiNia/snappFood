@@ -49,6 +49,12 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Place PlaceTypeSearch(string $word)
  * @method static Builder|Place PlaceIsOpen()
  * @mixin Eloquent
+ * @property int $score
+ * @property-read Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read Collection|\App\Models\Score[] $scores
+ * @property-read int|null $scores_count
+ * @method static Builder|Place whereScore($value)
  */
 class Place extends Model
 {

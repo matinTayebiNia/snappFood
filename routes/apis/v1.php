@@ -4,6 +4,7 @@ use App\Http\Controllers\Apis\V1\AddressController;
 use App\Http\Controllers\Apis\V1\Auth\AuthController;
 use App\Http\Controllers\Apis\V1\CartController;
 use App\Http\Controllers\Apis\V1\CommentController;
+use App\Http\Controllers\Apis\V1\OrderController;
 use App\Http\Controllers\Apis\V1\PlaceController;
 use App\Http\Controllers\Apis\V1\ProductController;
 use App\Http\Controllers\Apis\V1\UserController;
@@ -26,6 +27,12 @@ Route::prefix("/v1/")->group(function () {
     });
 
     Route::middleware("auth:sanctum")->group(function () {
+
+        //orders
+        Route::prefix("orders")->group(function () {
+            Route::get("/", [OrderController::class, "index"]);
+            Route::get("/{order}", [OrderController::class, "show"]);
+        });
 
         //Restaurants
         Route::prefix("Restaurants")->group(function () {

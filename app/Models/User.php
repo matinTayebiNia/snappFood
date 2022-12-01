@@ -51,6 +51,14 @@ use phpDocumentor\Reflection\Types\This;
  * @method static Builder|User getCurrentAddress($address_id)
  * @method static Builder|User whereCurrentAddress($value)
  * @mixin \Eloquent
+ * @property-read Collection|\App\Models\ActiveCode[] $activeCode
+ * @property-read int|null $active_code_count
+ * @property-read Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read Collection|\App\Models\Order[] $orders
+ * @property-read int|null $orders_count
+ * @property-read Collection|\App\Models\Score[] $scores
+ * @property-read int|null $scores_count
  */
 class User extends Authenticatable
 {
