@@ -26,6 +26,13 @@ Route::prefix("/v1/")->group(function () {
     });
 
     Route::middleware("auth:sanctum")->group(function () {
+
+        //Restaurants
+        Route::prefix("Restaurants")->group(function () {
+            Route::get("/{place}", [PlaceController::class, "show"]);
+            Route::get("/", [PlaceController::class, "index"]);
+        });
+
         //
         Route::patch("user/update", [UserController::class, "update"]);
 
@@ -39,17 +46,12 @@ Route::prefix("/v1/")->group(function () {
         Route::post("carts/pay/{product}", [CartController::class, "pay"]);
 
         Route::prefix("comments")->group(function () {
-            Route::get("/", []);
+            Route::get("/", [CommentController::class, "index"]);
             Route::post("/", [CommentController::class, "store"]);
         });
 
     });
 
-    //Restaurants
-    Route::prefix("Restaurants")->group(function () {
-        Route::get("/{place}", [PlaceController::class, "show"]);
-        Route::get("/", [PlaceController::class, "index"]);
-    });
 
     //foods
     Route::get("/{place}/foods", [ProductController::class, "foods"]);

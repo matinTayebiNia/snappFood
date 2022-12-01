@@ -17,17 +17,15 @@ class PlacesResource extends JsonResource
      * @param Request $request
      * @return array|Arrayable|JsonSerializable
      */
-    #[ArrayShape(["id" => "string",
-        "isOpen" => "\App\Models\Schedule|\Illuminate\Database\Eloquent\Builder",
-        "title" => "mixed",
-        "type" => "\Illuminate\Http\Resources\Json\AnonymousResourceCollection",
-        "address" => "mixed", "image" => "mixed"])]
+
+    #[ArrayShape(["id" => "string", "isOpen" => "\App\Models\Schedule|\Illuminate\Database\Eloquent\Builder", "title" => "mixed", "score" => "mixed", "type" => "\Illuminate\Http\Resources\Json\AnonymousResourceCollection", "address" => "mixed", "image" => "mixed"])]
     public function toArray($request): array|JsonSerializable|Arrayable
     {
         return [
-            "id" => (string) $this->id,
+            "id" => (string)$this->id,
             "isOpen" => Schedule::CheckSchedule(),
             "title" => $this->name,
+            "score" => $this->score,
             "type" => PlaceTypesResource::collection($this->placetypes),
             "address" => $this->address,
             "image" => $this->image

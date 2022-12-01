@@ -31,7 +31,7 @@ class AddressController extends Controller
 
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);
@@ -57,10 +57,10 @@ class AddressController extends Controller
                 "pluck" => $request->input("pluck"),
             ]);
 
-            return $this->successMessage("address added successfully");
+            return successMessage("address added successfully");
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);
@@ -80,10 +80,10 @@ class AddressController extends Controller
                 "currentAddress" => $address
             ]);
 
-            return $this->successMessage("current address updated successfully");
+            return successMessage("current address updated successfully");
 
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);
@@ -105,12 +105,12 @@ class AddressController extends Controller
                 auth()->user()->update([
                     "currentAddress" => $address->id
                 ]);
-            return $this->successMessage([
+            return successMessage([
                 "msg" => "address updated successfully",
                 "status" => true
             ]);
         } catch (Exception $exception) {
-            return $this->throwErrorMessageException([
+            return throwErrorMessageException([
                 "message" => $exception->getMessage(),
                 "code" => $exception->getCode()
             ]);

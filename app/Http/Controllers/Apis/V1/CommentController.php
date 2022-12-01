@@ -4,20 +4,42 @@ namespace App\Http\Controllers\Apis\V1;
 
 use App\Events\NewCommentForOwnerEvent;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Apis\Comment\ShowCommentRequest;
 use App\Http\Requests\Apis\Comment\StoreCommentRequest;
+use App\Http\Resources\Comments\ShowCommentsResource;
 use App\Models\Comment;
 use App\Models\Order;
+use App\Models\Place;
+use App\Models\Product;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CommentController extends Controller
 {
-    public function index()
+    public function index(Request $request): AnonymousResourceCollection|JsonResponse
     {
+        try {
 
+            $subject = Place::find($request->input("restaurant_id"));
+
+            if ($subject == null) {
+                $subject = Product::find($request->input("food_id"));
+            }
+
+            return ShowCommentsResource::collection($subject->comments()
+                ->where("approved", 1)->where("parent_id", 0)
+                ->paginate());
+
+        } catch (Exception $exception) {
+            return throwErrorMessageException([
+                "message" => $exception->getMessage(),
+                "code" => $exception->getCode(),
+            ]);
+        }
     }
 
     public function store(StoreCommentRequest $request): JsonResponse
@@ -62,7 +84,7 @@ class CommentController extends Controller
             "scoreable_type" => get_class($subject),
             "score" => $request->input("score"),
         ]);
-        
+
         $avg = $this->calculationOfScoreSubject($subject);
         $subject->update([
             "score" => max($avg, 1),

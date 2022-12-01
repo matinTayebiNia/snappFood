@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Apis\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Place\PlaceResource;
 use App\Http\Resources\Place\PlacesResource;
+use App\Models\Address;
 use App\Models\Place;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,7 +25,14 @@ class PlaceController extends Controller
     {
         try {
 
-            $places = Place::with(["schedules", "address", "placetypes"]);
+            $places = Place::with(["schedules", "address", "placetypes"])->whereHas("address", function ($query) {
+                $address = Address::find(auth()->user()->currentAddress);
+                $height = [intval($address->height - 600), intval($address->height + 600)];
+                $width = [intval($address->width - 600), intval($address->width + 600)];
+
+                return $query->whereBetween("height", $height)
+                    ->whereBetween("width", $width);
+            });
 
             if ($word = request("type")) {
                 $places = Place::PlaceTypeSearch($word);
