@@ -4,6 +4,7 @@ use App\Http\Controllers\Owner\OrderController;
 use App\Http\Controllers\Owner\OwnerController;
 use App\Http\Controllers\Owner\placeController;
 use App\Http\Controllers\Owner\ProductController;
+use App\Http\Controllers\Owner\ReportController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,3 +23,5 @@ Route::resource("placesOwner", placeController::class)
     ->except(["index", "destroy"]);
 
 Route::resource("products", ProductController::class)->except(["show"]);
+
+Route::get("/reports",[ReportController::class,"index"])->name("reports.index");
