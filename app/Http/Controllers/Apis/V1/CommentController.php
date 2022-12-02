@@ -25,11 +25,15 @@ class CommentController extends Controller
         try {
 
             $subject = Place::find($request->input("restaurant_id"));
-
-            if ($subject == null) {
-                $subject = Product::find($request->input("food_id"));
+            if ($subject) {
+                return ShowCommentsResource::collection($subject->comments()
+                    ->where("approved", 1)->where("parent_id", 0)
+                    ->paginate());
             }
-
+            $subject = Order::with("products")
+                ->whereHas("products", function ($query) use ($request) {
+                    $query->where("id", $request->input("food_id"));
+                })->first();
             return ShowCommentsResource::collection($subject->comments()
                 ->where("approved", 1)->where("parent_id", 0)
                 ->paginate());
@@ -49,8 +53,8 @@ class CommentController extends Controller
             $order = Order::find($request->input("order_id"));
             //todo change register strategy of comment !
             $user->comments()->create([
-                "commentable_id"=>$order->id,
-                "commentable_type"=>get_class($order),
+                "commentable_id" => $order->id,
+                "commentable_type" => get_class($order),
                 "comment" => $request->input("message"),
                 "parent_id" => $request->input("parent_id") ?? 0,
             ]);

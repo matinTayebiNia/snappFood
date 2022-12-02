@@ -52,7 +52,7 @@
                         </th>
                         <th scope="col"
                             class="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-right text-sm uppercase font-normal">
-                            مربوط به
+                            رستوران مربوطه
                         </th>
 
                         <th scope="col"
@@ -76,8 +76,11 @@
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <p class="text-gray-900 whitespace-no-wrap">
-                                    {{$comment->commentable->name}}
+                                    @foreach($comment->commentable->products as $product)
 
+                                          {{$product->place->name}},
+
+                                    @endforeach
                                 </p>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
