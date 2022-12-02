@@ -47,11 +47,25 @@ class CommentController extends Controller
         try {
             $user = auth()->user();
             $order = Order::find($request->input("order_id"));
-            $subject = $request->input("forFood")
-                ? $order->products->first()
-                : $order->products->first()->place;
-            $this->StoreCommentAndScore($user, $subject, $request);
+            //todo change register strategy of comment !
+            $user->comments()->create([
+                "commentable_id"=>$order->id,
+                "commentable_type"=>get_class($order),
+                "comment" => $request->input("message"),
+                "parent_id" => $request->input("parent_id") ?? 0,
+            ]);
 
+            $user->scores()->create([
+                "scoreable_id" => $order->id,
+                "scoreable_type" => get_class($order),
+                "score" => $request->input("score"),
+            ]);
+
+            $avg = $this->calculationOfScoreSubject($order);
+
+            $order->products()->update([
+                "score" => max($avg, 1),
+            ]);
 
             return successMessage("your comment and score registered! ", 201);
 
@@ -65,45 +79,15 @@ class CommentController extends Controller
     }
 
     /**
-     * @param Authenticatable|null $user
-     * @param Model $subject
-     * @param StoreCommentRequest $request
-     */
-    private function StoreCommentAndScore(?Authenticatable $user, Model $subject, StoreCommentRequest $request)
-    {
-
-        $user->comments()->create([
-            "commentable_id" => $subject->id,
-            "commentable_type" => get_class($subject),
-            "comment" => $request->input("message"),
-            "parent_id" => $request->input("parent_id") ?? 0,
-        ]);
-
-        $user->scores()->create([
-            "scoreable_id" => $subject->id,
-            "scoreable_type" => get_class($subject),
-            "score" => $request->input("score"),
-        ]);
-
-        $avg = $this->calculationOfScoreSubject($subject);
-        $subject->update([
-            "score" => max($avg, 1),
-        ]);
-
-
-    }
-
-    /**
      * @param Model $subject
      * @return float|int
      */
     private function calculationOfScoreSubject(Model $subject): int|float
     {
-        $count = $subject->scores->count();
 
-        $sumOfScores = $subject->scores->sum(function ($score) {
+        return $subject->scores->avg(function ($score) {
             return $score->score;
         });
-        return $sumOfScores / $count;
+
     }
 }

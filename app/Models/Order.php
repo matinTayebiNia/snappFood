@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -54,7 +55,12 @@ class Order extends Model
 
     public function getOrderOptions(): array
     {
-        return   ["unpaid", "canceled",
+        return ["unpaid", "canceled",
             "notPosted", "posted", "Received", "paid"];
+    }
+
+    public function scores(): MorphMany
+    {
+        return $this->morphMany(Score::class, "scoreable");
     }
 }

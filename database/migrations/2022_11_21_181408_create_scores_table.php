@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('scores', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("user_id");
-            $table->unsignedTinyInteger("score");
+            $table->unsignedFloat("score");
             $table->foreign("user_id")
                 ->references("id")
                 ->on("users")->cascadeOnDelete();

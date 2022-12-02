@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\Order;
 use App\Models\Place;
 use App\Models\Product;
 use App\Models\Score;
@@ -22,7 +23,10 @@ class ReportController extends Controller
      */
     public function index(): Factory|View|Application
     {
-        $products = auth()->user()->place->products->pluck("id");
+        $products = Order::with("products")
+            ->whereHas("products", function ($query) {
+                $query->where("place_id", auth()->user()->place->id);
+            })->pluck("id");
         $place_id = auth()->user()->place->id;
         $score = Score::query();
         list($FoodMonths, $FoodAvg) = $this->getFoodScore($products, $score);
@@ -43,7 +47,7 @@ class ReportController extends Controller
     private function getFoodScore(Collection $products, Builder $score): array
     {
         $FoodScores = $score->whereIn("scoreable_id", $products)
-            ->where("scoreable_type", Product::class)
+            ->where("scoreable_type", Order::class)
             ->select('score', "created_at")
             ->get()
             ->groupBy(function ($data) {
